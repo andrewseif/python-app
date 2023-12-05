@@ -7,7 +7,7 @@ image:
   repository: 648264488158.dkr.ecr.eu-north-1.amazonaws.com/simple-python
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "python-fbb194c1ef59e6318405473a8eceb44164235dc5"
+  tag: "python-879af69fcadef941a8fefd080ce7500f311dcfb3"
 imagePullSecrets:
   - name: aws-secret
 nameOverride: ""
