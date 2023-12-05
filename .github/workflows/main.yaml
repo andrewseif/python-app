@@ -79,6 +79,7 @@ jobs:
         git clone https://${{ secrets.HELM_ACCESS_KEY }}:${{ secrets.HELM_SECRET_KEY }}@github.com/andrewseif/python-app.git
         cd python-app
         pwd
+        ls -la
         git config --global user.email "python@pipeline"
         git config --global user.name "python"
         git checkout helm
