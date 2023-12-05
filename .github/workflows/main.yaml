@@ -6,64 +6,64 @@ on:
       - main
 
 jobs:
-  # build-and-test:
-  #   runs-on: ubuntu-latest
+  build-and-test:
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #   - name: Checkout code
-  #     uses: actions/checkout@v2
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-  #   - name: Set up Python
-  #     uses: actions/setup-python@v2
-  #     with:
-  #       python-version: 3.12
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.12
 
-  #   - name: Install dependencies
-  #     run: |
-  #       python -m pip install --upgrade pip
-  #       pip install -r requirements.txt
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
 
-  #   - name: Lint code
-  #     run: |
-  #       pip install flake8
-  #       flake8 .
+    - name: Lint code
+      run: |
+        pip install flake8
+        flake8 .
 
-  #   - name: Build Docker image
-  #     run: |
-  #       docker build -t simple-python:python-${{ github.sha }} . 
+    - name: Build Docker image
+      run: |
+        docker build -t simple-python:python-${{ github.sha }} . 
 
-  #   - name: Run Flask Application
-  #     run: |
-  #      docker run -d -p 8080:8080 --name python-app simple-python:python-${{ github.sha }}
+    - name: Run Flask Application
+      run: |
+       docker run -d -p 8080:8080 --name python-app simple-python:python-${{ github.sha }}
 
-  #   - name: Install Docker Bench for Security
-  #     run: |
-  #       git clone https://github.com/docker/docker-bench-security.git
-  #       chmod +x docker-bench-security/*.sh
+    - name: Install Docker Bench for Security
+      run: |
+        git clone https://github.com/docker/docker-bench-security.git
+        chmod +x docker-bench-security/*.sh
 
-  #   - name: Run Docker Bench for Security
-  #     run: |
-  #       cd docker-bench-security/
-  #       ./docker-bench-security.sh
+    - name: Run Docker Bench for Security
+      run: |
+        cd docker-bench-security/
+        ./docker-bench-security.sh
         
-  #   - name: Run Tests
-  #     run: pytest test_simple_python.py
+    - name: Run Tests
+      run: pytest test_simple_python.py
 
-  #   - name: stop container   
-  #     run: docker stop python-app && docker rm python-app
+    - name: stop container   
+      run: docker stop python-app && docker rm python-app
 
-  #   - name: Login to ECR
-  #     id: ecr
-  #     uses: jwalton/gh-ecr-login@v1
-  #     with:
-  #       access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #       secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  #       region: eu-north-1
+    - name: Login to ECR
+      id: ecr
+      uses: jwalton/gh-ecr-login@v1
+      with:
+        access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        region: eu-north-1
 
-  #   - name: Push to ECR
-  #     run: |
-  #       docker tag simple-python:python-${{ github.sha }} 648264488158.dkr.ecr.eu-north-1.amazonaws.com/simple-python:python-${{ github.sha }}
-  #       docker push 648264488158.dkr.ecr.eu-north-1.amazonaws.com/simple-python:python-${{ github.sha }}
+    - name: Push to ECR
+      run: |
+        docker tag simple-python:python-${{ github.sha }} 648264488158.dkr.ecr.eu-north-1.amazonaws.com/simple-python:python-${{ github.sha }}
+        docker push 648264488158.dkr.ecr.eu-north-1.amazonaws.com/simple-python:python-${{ github.sha }}
         
 
   update:
