@@ -82,6 +82,7 @@ jobs:
         git config --global user.name "python"
         git checkout main
         git pull
+        ls -la
 
     - name: Update Helm Chart
       run: |
