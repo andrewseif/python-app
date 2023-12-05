@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -28,12 +28,6 @@ jobs:
         pip install flake8
         flake8 .
 
-    # - name: Run Flask Application
-    #   run: |
-    #    nohup flask run --host=0.0.0.0 --port=8080 > app.log 2>&1 &
-    #    python -m unittest test_simple_python.py
-    #    sleep 5
-
     - name: Build Docker image
       run: |
         docker build -t simple-python:python-${{ github.sha }} . 
@@ -53,7 +47,7 @@ jobs:
         ./docker-bench-security.sh
         
     - name: Run Tests
-      run: python test_simple_python.py
+      run: pytest test_simple_python.py
 
     - name: stop container   
       run: docker stop python-app && docker rm python-app
@@ -61,7 +55,7 @@ jobs:
 
 
   # push:
-  #   needs: build
+  #   needs: build-and-test
   #   runs-on: ubuntu-latest
 
   #   steps:
@@ -95,7 +89,7 @@ jobs:
   #       cd python-app
   #       git config --global user.email "python@pipeline"
   #       git config --global user.name "python"
-  #       git checkout main
+  #       git checkout helm
   #       git pull
 
   #   - name: Update Helm Chart
@@ -107,4 +101,4 @@ jobs:
   #     run: |
   #       git add .
   #       git commit -m "Edit tag value for Python App image python-${{ github.sha }}"
-  #       git push origin main
+  #       git push origin helm
