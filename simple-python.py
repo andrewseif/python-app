@@ -24,5 +24,5 @@ def health_check():
 
 
 if __name__ == '__main__':
-    # Run on port 80
-    app.run(port=80)
+    # Run on port 8080
+    app.run(port=8080)

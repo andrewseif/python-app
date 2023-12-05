@@ -4,7 +4,7 @@ import json
 
 def test_hello_world_endpoint():
     result = subprocess.run(
-        ['curl', 'http://localhost:80/'],
+        ['curl', 'http://localhost:8080/'],
         capture_output=True,
         text=True
     )
@@ -14,7 +14,7 @@ def test_hello_world_endpoint():
 
 def test_health_check_endpoint():
     result = subprocess.run(
-        ['curl', 'http://localhost:80/health'],
+        ['curl', 'http://localhost:8080/health'],
         capture_output=True,
         text=True
     )
