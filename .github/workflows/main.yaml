@@ -82,6 +82,7 @@ jobs:
         git config --global user.name "python"
         git checkout helm
         git pull
+        cd python-app
         pwd
         ls -la
 
