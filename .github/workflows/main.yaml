@@ -84,14 +84,18 @@ jobs:
         git pull
         ls -la
         yq eval -i '.image.tag = "python-${{ github.sha }}"' python-app/values.yaml
-
-    - name: Update Helm Chart
-      run: |
-        
         echo "python app image tag updated"
-
-    - name: Commit and Push Changes
-      run: |
         git add .
         git commit -m "Edit tag value for python app image python-${{ github.sha }}"
         git push origin main
+
+    # - name: Update Helm Chart
+    #   run: |
+        
+    #     echo "python app image tag updated"
+
+    # - name: Commit and Push Changes
+    #   run: |
+    #     git add .
+    #     git commit -m "Edit tag value for python app image python-${{ github.sha }}"
+    #     git push origin main
