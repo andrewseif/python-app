@@ -38,6 +38,10 @@ jobs:
       run: |
         docker build -t simple-python:python-${{ github.sha }} . 
 
+    - name: Run Flask Application
+      run: |
+        docker run simple-python:python-${{ github.sha }}
+
     - name: Install Docker Bench for Security
       run: |
         git clone https://github.com/docker/docker-bench-security.git
@@ -47,20 +51,16 @@ jobs:
       run: |
         cd docker-bench-security/
         ./docker-bench-security.sh
+        python -m unittest test_simple_python.py
 
 
-  # build_and_push:
-  #   needs: security_scan
+  # push:
+  #   needs: build
   #   runs-on: ubuntu-latest
 
   #   steps:
   #   - name: Checkout code
   #     uses: actions/checkout@v2
-
-  #   - name: Set up Docker
-  #     uses: actions/setup-docker@v2
-  #     with:
-  #       dockerfile: Dockerfile
 
   #   - name: Login to ECR
   #     id: ecr
@@ -76,7 +76,7 @@ jobs:
   #       docker push 648264488158.dkr.ecr.eu-north-1.amazonaws.com/simple-python:python-${{ github.sha }}
 
   # update:
-  #   needs: build_and_push
+  #   needs: push
   #   runs-on: ubuntu-latest
 
   #   steps:
