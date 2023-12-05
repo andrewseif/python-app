@@ -1,0 +1,113 @@
+name: CI/CD pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.12
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Lint code
+      run: |
+        pip install flake8
+        flake8 .
+
+    - name: Run tests
+      run: |
+        python test_simple_python.py
+
+    - name: Build Docker image
+      run: |
+        docker build -t simple-python:python-${{ github.sha }} . 
+
+  security_scan:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Docker
+      uses: actions/setup-docker@v2
+      with:
+        dockerfile: Dockerfile
+
+    - name: Install Docker Bench for Security
+      run: |
+        git clone https://github.com/docker/docker-bench-security.git
+        chmod +x docker-bench-security/*.sh
+
+    - name: Run Docker Bench for Security
+      run: |
+        ./docker-bench-security/docker-bench-security.sh
+
+  build_and_push:
+    needs: security_scan
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Docker
+      uses: actions/setup-docker@v2
+      with:
+        dockerfile: Dockerfile
+
+    - name: Login to ECR
+      id: ecr
+      uses: jwalton/gh-ecr-login@v1
+      with:
+        access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        region: eu-north-1
+
+    - name: Push to ECR
+      run: |
+        docker tag simple-python:python-${{ github.sha }} 648264488158.dkr.ecr.eu-north-1.amazonaws.com/simple-python:python-${{ github.sha }}
+        docker push 648264488158.dkr.ecr.eu-north-1.amazonaws.com/simple-python:python-${{ github.sha }}
+
+  update:
+    needs: build_and_push
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Clone Repository
+      run: |
+        git clone https://${{ secrets.HELM_ACCESS_KEY }}:${{ secrets.HELM_SECRET_KEY }}@github.com/andrewseif/python-app.git
+        cd python-app
+        git config --global user.email "python@pipeline"
+        git config --global user.name "python"
+        git checkout main
+        git pull
+
+    - name: Update Helm Chart
+      run: |
+        yq eval -i '.image.tag = "python-${{ github.sha }}"' python-app/values.yaml
+        echo "Python App image tag updated"
+
+    - name: Commit and Push Changes
+      run: |
+        git add .
+        git commit -m "Edit tag value for Python App image python-${{ github.sha }}"
+        git push origin main
