@@ -53,9 +53,11 @@ jobs:
         ./docker-bench-security.sh
         
     - name: Run Tests
-      run: |
-        python test_simple_python.py
-        docker stop python-app && docker rm python-app
+      run: python test_simple_python.py
+
+    - name: stop container   
+      run: docker stop python-app && docker rm python-app
+        
 
 
   # push:
