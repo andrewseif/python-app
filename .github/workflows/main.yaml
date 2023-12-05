@@ -28,9 +28,15 @@ jobs:
         pip install flake8
         flake8 .
 
-    - name: Run tests
+    - name: Run Flask Application
       run: |
-        python test_simple_python.py
+        flask run --host=0.0.0.0 --port=8080 > app.log 2>&1 &
+
+    - name: Wait for Flask Application
+      run: sleep 5
+
+    - name: Run Tests
+      run: python -m unittest test_simple_python.py
 
     - name: Build Docker image
       run: |
