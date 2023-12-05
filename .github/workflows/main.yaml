@@ -53,7 +53,7 @@ jobs:
 
     - name: Run Docker Bench for Security
       run: |
-        cd /docker-bench-security/
+        cd docker-bench-security/
         ./docker-bench-security.sh
 
   # build_and_push:
