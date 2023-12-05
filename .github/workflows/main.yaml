@@ -48,8 +48,6 @@ jobs:
 
     - name: Set up Docker
       uses: actions/setup-docker@v2
-      with:
-        dockerfile: Dockerfile
 
     - name: Install Docker Bench for Security
       run: |
