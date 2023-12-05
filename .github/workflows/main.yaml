@@ -37,7 +37,6 @@ jobs:
     - name: Build Docker image
       run: |
         docker build -t simple-python:python-${{ github.sha }} . 
-          - name: Upload math result for job 1
 
     - name: upload docker image  
       uses: actions/upload-artifact@v3
