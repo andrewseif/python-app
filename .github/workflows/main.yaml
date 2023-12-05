@@ -37,6 +37,13 @@ jobs:
     - name: Build Docker image
       run: |
         docker build -t simple-python:python-${{ github.sha }} . 
+          - name: Upload math result for job 1
+
+    - name: upload docker image  
+      uses: actions/upload-artifact@v3
+      with:
+        name: simple-python
+        path: msimple-python:python-${{ github.sha }} 
 
   security_scan:
     needs: build
@@ -45,6 +52,11 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+
+    - name: Download docker image
+      uses: actions/download-artifact@v3
+      with:
+        name: simple-python
 
     - name: Install Docker Bench for Security
       run: |
