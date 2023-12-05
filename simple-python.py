@@ -22,7 +22,7 @@ def health_check():
 
     return jsonify(response)
 
-    
+
 if __name__ == '__main__':
     # Run on port 8080
     app.run(port=8080)
