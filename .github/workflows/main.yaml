@@ -80,19 +80,16 @@ jobs:
         cd python-app
         git config --global user.email "python@pipeline"
         git config --global user.name "python"
-        git checkout helm
+        git checkout main
         git pull
-        cd python-app
-        pwd
-        ls -la
 
     - name: Update Helm Chart
       run: |
-        yq eval -i '.image.tag = "python-${{ github.sha }}"' values.yaml
+        yq eval -i '.image.tag = "python-${{ github.sha }}"' python-app/values.yaml
         echo "python app image tag updated"
 
     - name: Commit and Push Changes
       run: |
         git add .
         git commit -m "Edit tag value for python app image python-${{ github.sha }}"
-        git push origin helm
+        git push origin main
