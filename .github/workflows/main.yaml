@@ -42,7 +42,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: simple-python
-        path: simple-python:python-${{ github.sha }} 
+        path: .
 
   security_scan:
     needs: build
