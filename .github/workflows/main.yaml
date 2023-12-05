@@ -38,25 +38,6 @@ jobs:
       run: |
         docker build -t simple-python:python-${{ github.sha }} . 
 
-    - name: upload docker image  
-      uses: actions/upload-artifact@v3
-      with:
-        name: simple-python
-        path: .
-
-  security_scan:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Download docker image
-      uses: actions/download-artifact@v3
-      with:
-        name: simple-python
-
     - name: Install Docker Bench for Security
       run: |
         git clone https://github.com/docker/docker-bench-security.git
@@ -66,6 +47,7 @@ jobs:
       run: |
         cd docker-bench-security/
         ./docker-bench-security.sh
+
 
   # build_and_push:
   #   needs: security_scan
