@@ -67,7 +67,7 @@ jobs:
         
 
   update:
-    # needs: build-and-test
+    needs: build-and-test
     runs-on: ubuntu-latest
 
     steps:
