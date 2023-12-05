@@ -54,51 +54,51 @@ jobs:
         
 
 
-  # push:
-  #   needs: build-and-test
-  #   runs-on: ubuntu-latest
+  push:
+    needs: build-and-test
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #   - name: Checkout code
-  #     uses: actions/checkout@v2
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-  #   - name: Login to ECR
-  #     id: ecr
-  #     uses: jwalton/gh-ecr-login@v1
-  #     with:
-  #       access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #       secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  #       region: eu-north-1
+    - name: Login to ECR
+      id: ecr
+      uses: jwalton/gh-ecr-login@v1
+      with:
+        access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        region: eu-north-1
 
-  #   - name: Push to ECR
-  #     run: |
-  #       docker tag simple-python:python-${{ github.sha }} 648264488158.dkr.ecr.eu-north-1.amazonaws.com/simple-python:python-${{ github.sha }}
-  #       docker push 648264488158.dkr.ecr.eu-north-1.amazonaws.com/simple-python:python-${{ github.sha }}
+    - name: Push to ECR
+      run: |
+        docker tag simple-python:python-${{ github.sha }} 648264488158.dkr.ecr.eu-north-1.amazonaws.com/simple-python:python-${{ github.sha }}
+        docker push 648264488158.dkr.ecr.eu-north-1.amazonaws.com/simple-python:python-${{ github.sha }}
 
-  # update:
-  #   needs: push
-  #   runs-on: ubuntu-latest
+  update:
+    needs: push
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #   - name: Checkout code
-  #     uses: actions/checkout@v3
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-  #   - name: Clone Repository
-  #     run: |
-  #       git clone https://${{ secrets.HELM_ACCESS_KEY }}:${{ secrets.HELM_SECRET_KEY }}@github.com/andrewseif/python-app.git
-  #       cd python-app
-  #       git config --global user.email "python@pipeline"
-  #       git config --global user.name "python"
-  #       git checkout helm
-  #       git pull
+    - name: Clone Repository
+      run: |
+        git clone https://${{ secrets.HELM_ACCESS_KEY }}:${{ secrets.HELM_SECRET_KEY }}@github.com/andrewseif/python-app.git
+        cd python-app
+        git config --global user.email "python@pipeline"
+        git config --global user.name "python"
+        git checkout helm
+        git pull
 
-  #   - name: Update Helm Chart
-  #     run: |
-  #       yq eval -i '.image.tag = "python-${{ github.sha }}"' python-app/values.yaml
-  #       echo "Python App image tag updated"
+    - name: Update Helm Chart
+      run: |
+        yq eval -i '.image.tag = "python-${{ github.sha }}"' python-app/values.yaml
+        echo "Python App image tag updated"
 
-  #   - name: Commit and Push Changes
-  #     run: |
-  #       git add .
-  #       git commit -m "Edit tag value for Python App image python-${{ github.sha }}"
-  #       git push origin helm
+    - name: Commit and Push Changes
+      run: |
+        git add .
+        git commit -m "Edit tag value for Python App image python-${{ github.sha }}"
+        git push origin helm
