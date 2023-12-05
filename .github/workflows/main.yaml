@@ -88,7 +88,7 @@ jobs:
 
     - name: Update Helm Chart
       run: |
-        yq eval -i '.image.tag = "python-${{ github.sha }}"' ./values.yaml
+        yq eval -i '.image.tag = "python-${{ github.sha }}"' values.yaml
         echo "python app image tag updated"
 
     - name: Commit and Push Changes
