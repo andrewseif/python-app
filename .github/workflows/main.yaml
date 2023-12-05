@@ -51,16 +51,6 @@ jobs:
 
     - name: stop container   
       run: docker stop python-app && docker rm python-app
-        
-
-
-  push:
-    needs: build-and-test
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
 
     - name: Login to ECR
       id: ecr
@@ -74,6 +64,7 @@ jobs:
       run: |
         docker tag simple-python:python-${{ github.sha }} 648264488158.dkr.ecr.eu-north-1.amazonaws.com/simple-python:python-${{ github.sha }}
         docker push 648264488158.dkr.ecr.eu-north-1.amazonaws.com/simple-python:python-${{ github.sha }}
+        
 
   update:
     needs: push
