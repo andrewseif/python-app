@@ -1,18 +1,22 @@
-import unittest
-import requests
+import subprocess
+import json
 
 
-class SimplePythonAppTest(unittest.TestCase):
-    def test_hello_world_endpoint(self):
-        response = requests.get('http://localhost:8080/')
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), {"message": "Hello World"})
-
-    def test_health_endpoint(self):
-        response = requests.get('http://localhost:8080/health')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(response.json()['status'], ['success', 'failure'])
+def test_hello_world_endpoint():
+    result = subprocess.run(
+        ['curl', 'http://localhost:8080/'],
+        capture_output=True,
+        text=True
+    )
+    response = json.loads(result.stdout)
+    assert response == {"message": "Hello World"}
 
 
-if __name__ == '__main__':
-    unittest.main()
+def test_health_check_endpoint():
+    result = subprocess.run(
+        ['curl', 'http://localhost:8080/health'],
+        capture_output=True,
+        text=True
+    )
+    response = json.loads(result.stdout)
+    assert response["status"] == "success"

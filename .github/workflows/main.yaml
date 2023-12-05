@@ -40,7 +40,7 @@ jobs:
 
     - name: Run Flask Application
       run: |
-        docker run simple-python:python-${{ github.sha }}
+       docker run -d -p 8080:8080 --name python-app simple-python:python-${{ github.sha }}
 
     - name: Install Docker Bench for Security
       run: |
@@ -51,7 +51,11 @@ jobs:
       run: |
         cd docker-bench-security/
         ./docker-bench-security.sh
-        python -m unittest test_simple_python.py
+        docker stop python-app && docker rm python-app
+    - name: Run Tests
+      run: |
+        python test_simple_python.py
+        docker stop python-app && docker rm python-app
 
 
   # push:
